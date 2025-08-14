@@ -63,6 +63,7 @@ The script will guide you through the following steps:
 - F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
 - E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
 - G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
+
   [bumpmeup nodes](https://nymesis.vercel.app/?q=bump)
 
 _Node monitoring tool:_
