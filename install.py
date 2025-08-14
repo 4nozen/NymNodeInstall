@@ -60,7 +60,7 @@ class Colors:
 class ProgressIndicator:
     """Progress indicator for long-running operations"""
     
-    def __init__(self, message: str, spinner_chars: str = "|/-\\" ):
+    def __init__(self, message: str, spinner_chars: str = "|/-\" ):
         self.message = message
         self.spinner_chars = spinner_chars
         self.running = False
@@ -223,18 +223,10 @@ class CommandRunner:
                 universal_newlines=True
             )
             
-            output_line = ""
-            while True:
-                char = process.stdout.read(1)
-                if not char:
-                    break
-                    
-                if char == '\n':
+            if process.stdout:
+                for line in iter(process.stdout.readline, ''):
                     # Clear line and show current progress
-                    print(f'\r{Colors.GREEN_LIGHT} {output_line[:80]}...{Colors.END}', end='', flush=True)
-                    output_line = ""
-                else:
-                    output_line += char
+                    print(f'\n{Colors.GREEN_LIGHT} {line.strip()[:80]}...{Colors.END}', end='', flush=True)
                     
             process.wait()
             print('\r' + ' ' * 90 + '\r', end='', flush=True)  # Clear line
@@ -600,7 +592,8 @@ details = "{details}"
         # Get the actual username (not root when using sudo)
         current_user = os.getenv("SUDO_USER") or os.getenv("USER") or getpass.getuser()
 
-        service_content = f"""[Unit]
+        service_content = f"""
+[Unit]
 Description=Nym Node ({self.config.node_id})
 After=network.target
 Wants=network.target

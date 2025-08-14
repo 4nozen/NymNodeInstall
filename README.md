@@ -60,11 +60,21 @@ The script will guide you through the following steps:
 
 **You can delegate to my nodes:**
 
-- F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
-- E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
-- G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
+```bash
+F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
 
-  [bumpmeup nodes](https://nymesis.vercel.app/?q=bump)
+```
+
+```bash
+E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
+
+```
+
+```bash
+G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
+```
+
+[bumpmeup nodes](https://nymesis.vercel.app/?q=bump)
 
 _Node monitoring tool:_
 [Nymesis](https://nymesis.vercel.app/) https://nymesis.vercel.app/
@@ -74,3 +84,7 @@ _Node monitoring tool:_
 > **⚠️ Security Warning**
 >
 > Always review scripts that require `sudo` privileges before running them on your system. This script performs system-wide actions, including installing packages, modifying the firewall, and creating system services.
+
+```
+
+```
