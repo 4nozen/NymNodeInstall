@@ -20,14 +20,9 @@ This script provides an automated way to install, configure, and manage a [Nym M
 ## Usage
 
 1.  **Clone the repository or download the script:**
+
     ```bash
-    git clone <repository_url>
-    cd <repository_directory>
-    ```
-    or
-    ```bash
-    wget https://<url_to_the_script>/install.py
-    chmod +x install.py
+    wget https://https://github.com/4nozen/NymNodeInstall/blob/main/install.py
     ```
 
 2.  **Run the installer:**
@@ -35,14 +30,16 @@ This script provides an automated way to install, configure, and manage a [Nym M
     The script requires `sudo` privileges for system-wide changes.
 
     **Standard Installation (with system update):**
+
     ```bash
-    sudo python3 install.py
+    python3 install.py
     ```
 
     **Installation without system update:**
     If you want to skip the initial system update and upgrade steps, use the `--no-update` flag:
+
     ```bash
-    sudo python3 install.py --no-update
+    python3 install.py --no-update
     ```
 
 ## Installation Process
@@ -58,6 +55,17 @@ The script will guide you through the following steps:
 7.  **Bonding**: The script will provide you with an **Identity Key** and **Host IP**. You will need to use these in the Nym Wallet to generate a payload.
 8.  **Signing**: Paste the payload from the wallet back into the terminal to complete the signing process.
 9.  **Service Start**: The `nym-node` service will be started and enabled on boot.
+
+---
+
+**You can delegate to my nodes:**
+F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
+E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
+G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
+[Nymesis](https://nymesis.vercel.app/?q=bump)
+
+_Node monitoring tool:_
+[Nymesis](https://nymesis.vercel.app/)
 
 ---
 
