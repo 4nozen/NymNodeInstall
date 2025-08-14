@@ -31,27 +31,36 @@ class NodeConfig:
 
 class Colors:
     """ANSI colors for terminal output"""
-    RED = '\033[91m'
-    GREEN = '\033[92m'
+    # Main Theme Colors (Green Tones)
+    GREEN_BRIGHT = '\033[92m'
+    GREEN_LIGHT = '\033[38;5;42m'
+    GREEN_DARK = '\033[38;5;22m'
+    
+    # Accent & Status Colors
     YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    PURPLE = '\033[95m'
+    RED = '\033[91m'
     CYAN = '\033[96m'
     WHITE = '\033[97m'
+    
+    # Special Highlight Colors
+    HIGHLIGHT_BG = '\033[48;5;22m' # Dark Green BG
+    HIGHLIGHT_FG = '\033[38;5;154m' # Bright Green FG
+    
+    # Text Styles
     BOLD = '\033[1m'
     DIM = '\033[2m'
     UNDERLINE = '\033[4m'
     END = '\033[0m'
-    
-    # Background colors
+
+    # Background colors for important messages
     BG_RED = '\033[101m'
-    BG_GREEN = '\033[102m'
     BG_YELLOW = '\033[103m'
+    BG_GREEN_BRIGHT = '\033[102m'
 
 class ProgressIndicator:
     """Progress indicator for long-running operations"""
     
-    def __init__(self, message: str, spinner_chars: str = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"):
+    def __init__(self, message: str, spinner_chars: str = "|/-\\" ):
         self.message = message
         self.spinner_chars = spinner_chars
         self.running = False
@@ -86,7 +95,7 @@ class ProgressIndicator:
         idx = 0
         while self.running:
             char = self.spinner_chars[idx % len(self.spinner_chars)]
-            print(f'\r{Colors.CYAN}{char} {self.message}...{Colors.END}', end='', flush=True)
+            print(f'\r{Colors.GREEN_LIGHT}{char} {self.message}...{Colors.END}', end='', flush=True)
             time.sleep(0.1)
             idx += 1
 
@@ -96,58 +105,58 @@ class Logger:
     @staticmethod
     def success(message: str) -> None:
         """Print success message"""
-        print(f"{Colors.GREEN}{Colors.BOLD}✅ SUCCESS:{Colors.END} {Colors.GREEN}{message}{Colors.END}")
+        print(f"{Colors.GREEN_BRIGHT}{Colors.BOLD}SUCCESS:{Colors.END} {Colors.GREEN_LIGHT}{message}{Colors.END}")
 
     @staticmethod
     def error(message: str) -> None:
         """Print error message"""
-        print(f"{Colors.RED}{Colors.BOLD}❌ ERROR:{Colors.END} {Colors.RED}{message}{Colors.END}")
+        print(f"{Colors.RED}{Colors.BOLD}ERROR:{Colors.END} {Colors.RED}{message}{Colors.END}")
 
     @staticmethod
     def warning(message: str) -> None:
         """Print warning message"""
-        print(f"{Colors.YELLOW}{Colors.BOLD}⚠️  WARNING:{Colors.END} {Colors.YELLOW}{message}{Colors.END}")
+        print(f"{Colors.YELLOW}{Colors.BOLD}WARNING:{Colors.END} {Colors.YELLOW}{message}{Colors.END}")
 
     @staticmethod
     def info(message: str) -> None:
         """Print info message"""
-        print(f"{Colors.BLUE}{Colors.BOLD}ℹ️  INFO:{Colors.END} {Colors.BLUE}{message}{Colors.END}")
+        print(f"{Colors.GREEN_LIGHT}{Colors.BOLD}INFO:{Colors.END} {Colors.GREEN_DARK}{message}{Colors.END}")
 
     @staticmethod
     def debug(message: str) -> None:
         """Print debug message"""
-        print(f"{Colors.DIM}🔍 DEBUG: {message}{Colors.END}")
+        print(f"{Colors.DIM}DEBUG: {message}{Colors.END}")
 
     @staticmethod
     def step(step_num: int, total_steps: int, message: str) -> None:
         """Print step message"""
         progress = "█" * (step_num * 20 // total_steps) + "░" * (20 - (step_num * 20 // total_steps))
-        print(f"{Colors.PURPLE}{Colors.BOLD}[{step_num}/{total_steps}]{Colors.END} "
-              f"{Colors.PURPLE}[{progress}]{Colors.END} {message}")
+        print(f"{Colors.GREEN_BRIGHT}{Colors.BOLD}[{step_num}/{total_steps}]{Colors.END} "
+              f"{Colors.GREEN_DARK}[{progress}]{Colors.END} {message}")
 
     @staticmethod
     def section(title: str) -> None:
         """Print section header"""
         border = "═" * (len(title) + 4)
-        print(f"\n{Colors.BOLD}{Colors.CYAN}{border}")
+        print(f"\n{Colors.BOLD}{Colors.GREEN_BRIGHT}{border}")
         print(f"  {title}")
         print(f"{border}{Colors.END}\n")
 
     @staticmethod
     def highlight(message: str) -> None:
         """Print highlighted message"""
-        print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.BOLD} {message} {Colors.END}")
+        print(f"{Colors.HIGHLIGHT_BG}{Colors.HIGHLIGHT_FG}{Colors.BOLD} {message} {Colors.END}")
 
     @staticmethod
     def prompt(message: str) -> str:
         """Get user input with styled prompt"""
-        return input(f"{Colors.YELLOW}{Colors.BOLD}❓ {message}{Colors.END} ")
+        return input(f"{Colors.YELLOW}{Colors.BOLD}{message}{Colors.END} ")
 
     @staticmethod
     def sudo_prompt(reason: str) -> None:
         """Explain why sudo is needed"""
         print(f"\n{Colors.BG_RED}{Colors.WHITE}{Colors.BOLD} SUDO REQUIRED {Colors.END}")
-        print(f"{Colors.RED}🔒 Reason: {reason}{Colors.END}")
+        print(f"{Colors.RED}Reason: {reason}{Colors.END}")
         print(f"{Colors.YELLOW}Please enter your password when prompted.{Colors.END}\n")
 
 class CommandRunner:
@@ -222,7 +231,7 @@ class CommandRunner:
                     
                 if char == '\n':
                     # Clear line and show current progress
-                    print(f'\r{Colors.CYAN}📦 {output_line[:80]}...{Colors.END}', end='', flush=True)
+                    print(f'\r{Colors.GREEN_LIGHT} {output_line[:80]}...{Colors.END}', end='', flush=True)
                     output_line = ""
                 else:
                     output_line += char
@@ -244,7 +253,7 @@ class SystemManager:
     @staticmethod
     def update_system() -> bool:
         """Update the system with progress indication"""
-        Logger.section("🔄 Updating System Packages")
+        Logger.section("Updating System Packages")
 
         try:
             # Update package list
@@ -271,7 +280,7 @@ class SystemManager:
                 return False
             Logger.success("System packages upgraded")
 
-            Logger.success("✨ System update completed successfully!")
+            Logger.success("System update completed successfully!")
             return True
             
         except subprocess.CalledProcessError as e:
@@ -284,7 +293,7 @@ class SystemManager:
     @staticmethod
     def install_packages(packages: List[str]) -> bool:
         """Install packages with detailed feedback"""
-        Logger.section(f"📦 Installing Required Packages")
+        Logger.section(f"Installing Required Packages")
         
         if not packages:
             Logger.info("No packages to install")
@@ -342,7 +351,7 @@ class NetworkManager:
             "https://ident.me",
         ]
         
-        Logger.info("🌐 Detecting public IP address...")
+        Logger.info("Detecting public IP address...")
         
         for service in services:
             try:
@@ -360,7 +369,7 @@ class NetworkManager:
     @staticmethod
     def open_ports(ports: List[int]) -> bool:
         """Open ports using ufw with detailed feedback"""
-        Logger.section(f"🔓 Configuring Firewall")
+        Logger.section(f"Configuring Firewall")
         
         try:
             # Check if ufw exists
@@ -407,7 +416,7 @@ class NetworkManager:
                     Logger.error(f"Failed to open port {port}")
 
             if success_count == len(ports):
-                Logger.success(f"✨ All {len(ports)} ports configured successfully")
+                Logger.success(f"All {len(ports)} ports configured successfully")
                 return True
             else:
                 Logger.warning(f"Only {success_count}/{len(ports)} ports were configured")
@@ -439,7 +448,7 @@ class NymNodeManager:
 
     def download_latest_binary(self) -> str:
         """Download the latest binary using urllib"""
-        Logger.section("📥 Downloading Nym Node Binary")
+        Logger.section("Downloading Nym Node Binary")
 
         api_url = "https://api.github.com/repos/nymtech/nym/releases/latest"
         
@@ -503,11 +512,11 @@ class NymNodeManager:
 
     def initialize_node(self) -> bool:
         """Initialize the node with enhanced UX"""
-        Logger.section("🚀 Node Initialization")
+        Logger.section("Node Initialization")
 
         # Get node ID
         while not self.config.node_id:
-            self.config.node_id = Logger.prompt("Enter your unique node ID").strip()
+            self.config.node_id = Logger.prompt("Enter your unique node ID: ").strip()
             if not self.config.node_id:
                 Logger.error("Node ID cannot be empty!")
             elif len(self.config.node_id) < 3:
@@ -519,7 +528,7 @@ class NymNodeManager:
         # Get public IP
         self.config.public_ip = NetworkManager.get_public_ip()
         if not self.config.public_ip:
-            manual_ip = Logger.prompt("Could not detect IP. Enter manually (or press Enter to retry)")
+            manual_ip = Logger.prompt("Could not detect IP. Enter manually (or press Enter to retry): ")
             if manual_ip.strip():
                 self.config.public_ip = manual_ip.strip()
             else:
@@ -539,7 +548,7 @@ class NymNodeManager:
                     "--accept-operator-terms-and-conditions"
                 ], capture_output=True, text=True, check=True)
                 
-            Logger.success("✨ Node initialized successfully!")
+            Logger.success("Node initialized successfully!")
             return True
             
         except subprocess.CalledProcessError as e:
@@ -550,7 +559,7 @@ class NymNodeManager:
 
     def create_description_toml(self) -> str:
         """Create description.toml file with better UX"""
-        Logger.section("📝 Node Description Configuration")
+        Logger.section("Node Description Configuration")
 
         base_dir = Path.home() / ".nym" / "nym-nodes" / self.config.node_id / "data"
         base_dir.mkdir(parents=True, exist_ok=True)
@@ -558,9 +567,9 @@ class NymNodeManager:
 
         Logger.info("Configure your node description (optional, press Enter to skip):")
         
-        website = Logger.prompt("Website URL").strip()
-        security_contact = Logger.prompt("Security contact email").strip()
-        details = Logger.prompt("Node description/details").strip()
+        website = Logger.prompt("Website URL: ").strip()
+        security_contact = Logger.prompt("Security contact email: ").strip()
+        details = Logger.prompt("Node description/details: ").strip()
 
         content = f'''moniker = "{self.config.node_id}"
 website = "{website}"
@@ -579,7 +588,7 @@ details = "{details}"
 
     def create_systemd_service(self) -> bool:
         """Create systemd service with proper user handling"""
-        Logger.section("⚙️  Setting up System Service")
+        Logger.section("Setting up System Service")
 
         if not self.config.node_id:
             Logger.error("Node ID is not set!")
@@ -655,7 +664,7 @@ WantedBy=multi-user.target
                 sudo_reason="Start nym-node service"
             )
 
-            Logger.success(f"✨ Service {Colors.YELLOW}{service_name}{Colors.END} is running and enabled")
+            Logger.success(f"Service {Colors.YELLOW}{service_name}{Colors.END} is running and enabled")
             return True
             
         except Exception as e:
@@ -747,7 +756,7 @@ WantedBy=multi-user.target
             balance_nym = balance_unym / 1_000_000
             
             if balance_nym >= 101:
-                Logger.success(f"Current balance: {Colors.GREEN}{balance_nym:.6f} NYM{Colors.END} ✅")
+                Logger.success(f"Current balance: {Colors.GREEN_BRIGHT}{balance_nym:.6f} NYM{Colors.END}")
             elif balance_nym > 0:
                 Logger.warning(f"Current balance: {Colors.YELLOW}{balance_nym:.6f} NYM{Colors.END} (need 101 NYM)")
             else:
@@ -758,7 +767,7 @@ WantedBy=multi-user.target
 
     def sign_contract_message(self) -> None:
         """Sign the contract message with enhanced UX"""
-        Logger.section("🔐 Contract Message Signing")
+        Logger.section("Contract Message Signing")
 
         bonding_info = self.get_bonding_information()
         if not bonding_info or not bonding_info.get("identity_key"):
@@ -770,16 +779,17 @@ WantedBy=multi-user.target
         print(f"{Colors.BOLD}Identity Key:{Colors.END} {Colors.YELLOW}{bonding_info['identity_key']}{Colors.END}")
         print(f"{Colors.BOLD}Host:{Colors.END} {Colors.YELLOW}{bonding_info['host']}{Colors.END}")
         
-        Logger.info("\n📖 Instructions:")
+        Logger.info("\nInstructions:")
         Logger.info("1. Open the Nym Wallet application")
         Logger.info("2. Go to the bonding section")
         Logger.info("3. Use the information above to generate the payload")
         Logger.info("4. Copy the generated payload and paste it below")
-        Logger.info("\n🔗 Documentation: https://nym.com/docs/operators/nodes/nym-node/bonding#bond-via-the-desktop-wallet-recommended")
+        Logger.info("\nDocumentation: https://nym.com/docs/operators/nodes/nym-node/bonding#bond-via-the-desktop-wallet-recommended")
         
         # Get payload from user
         while True:
             print(f"\n{Colors.YELLOW}{Colors.BOLD}Please paste the payload generated by the wallet:{Colors.END}")
+            Logger.highlight("PASTE PAYLOAD HERE")
             payload = input(f"{Colors.CYAN}> {Colors.END}").strip()
             
             if payload:
@@ -804,11 +814,11 @@ WantedBy=multi-user.target
                 signature = self._extract_signature(result.stdout)
                 
                 if signature:
-                    Logger.success("✨ Contract message signed successfully!")
-                    Logger.highlight("📋 ENTER THIS SIGNATURE IN YOUR WALLET")
-                    print(f"\n{Colors.BG_GREEN}{Colors.WHITE}{Colors.BOLD} {signature} {Colors.END}\n")
+                    Logger.success("Contract message signed successfully!")
+                    Logger.highlight("ENTER THIS SIGNATURE IN YOUR WALLET")
+                    print(f"\n{Colors.BG_GREEN_BRIGHT}{Colors.WHITE}{Colors.BOLD} {signature} {Colors.END}\n")
                     
-                    Logger.info("📖 Next steps:")
+                    Logger.info("Next steps:")
                     Logger.info("1. Copy the signature above")
                     Logger.info("2. Return to your Nym Wallet")
                     Logger.info("3. Paste this signature in the 'Signature' field")
@@ -816,21 +826,21 @@ WantedBy=multi-user.target
                     
                     # Ask user to confirm they've copied it
                     while True:
-                        confirmed = Logger.prompt("Have you copied the signature to your wallet? (yes/no)")
+                        confirmed = Logger.prompt("Have you copied the signature to your wallet? (yes/no): ")
                         if confirmed.lower() in ['yes', 'y']:
-                            Logger.success("✅ Signature confirmed as copied")
+                            Logger.success("Signature confirmed as copied")
                             break
                         elif confirmed.lower() in ['no', 'n']:
                             Logger.info("Please copy the signature before continuing")
                             Logger.highlight("SIGNATURE TO COPY")
-                            print(f"{Colors.BG_GREEN}{Colors.WHITE}{Colors.BOLD} {signature} {Colors.END}")
+                            print(f"{Colors.BG_GREEN_BRIGHT}{Colors.WHITE}{Colors.BOLD} {signature} {Colors.END}")
                             continue
                         else:
                             Logger.error("Please answer 'yes' or 'no'")
                 else:
                     Logger.warning("Could not extract signature from output")
                     Logger.highlight("FULL SIGNATURE OUTPUT")
-                    print(f"{Colors.GREEN}{result.stdout}{Colors.END}")
+                    print(f"{Colors.GREEN_LIGHT}{result.stdout}{Colors.END}")
             else:
                 Logger.warning("No signature output received")
 
@@ -888,38 +898,39 @@ class NymNodeInstaller:
             self._show_completion()
 
         except KeyboardInterrupt:
-            Logger.warning("\n🚫 Installation interrupted by user")
+            Logger.warning("\nInstallation interrupted by user")
             Logger.info("You can run this script again to continue the installation")
             sys.exit(1)
         except Exception as e:
-            Logger.error(f"💥 Unexpected error: {e}")
+            Logger.error(f"Unexpected error: {e}")
             Logger.debug(f"Error type: {type(e).__name__}")
             sys.exit(1)
 
     def _print_welcome(self):
         """Print welcome message"""
-        print(f"\n{Colors.BOLD}{Colors.CYAN}{'🎉 ' * 20}")
+        border = "─" * 40
+        print(f"\n{Colors.BOLD}{Colors.GREEN_BRIGHT}{border}")
         print(f"    Welcome to the Nym Node Installer!")
         print(f"         Enhanced & User-Friendly")
-        print(f"{'🎉 ' * 20}{Colors.END}\n")
+        print(f"{border}{Colors.END}\n")
         
         Logger.info("This installer will:")
-        print(f"  {Colors.GREEN}•{Colors.END} Update your system (optional)")
-        print(f"  {Colors.GREEN}•{Colors.END} Install required dependencies")
-        print(f"  {Colors.GREEN}•{Colors.END} Download and configure Nym node")
-        print(f"  {Colors.GREEN}•{Colors.END} Set up systemd service")
-        print(f"  {Colors.GREEN}•{Colors.END} Generate wallet credentials")
-        print(f"  {Colors.GREEN}•{Colors.END} Help with bonding process")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Update your system (optional)")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Install required dependencies")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Download and configure Nym node")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Set up systemd service")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Generate wallet credentials")
+        print(f"  {Colors.GREEN_BRIGHT}•{Colors.END} Help with bonding process")
         
-        print(f"\n{Colors.YELLOW}⚠️  You'll be prompted for sudo password when needed{Colors.END}")
+        print(f"\n{Colors.YELLOW}You'll be prompted for sudo password when needed{Colors.END}")
         
-        if not Logger.prompt("Continue? (y/N)").lower().startswith('y'):
+        if not Logger.prompt("Continue? (y/N): ").lower().startswith('y'):
             Logger.info("Installation cancelled by user")
             sys.exit(0)
 
     def _install_node(self, no_update: bool = False) -> bool:
         """Full node installation with progress tracking"""
-        Logger.section("🚀 Node Installation Process")
+        Logger.section("Node Installation Process")
 
         steps = [
             ("System Update", not no_update),
@@ -944,7 +955,7 @@ class NymNodeInstaller:
                     Logger.error("System update failed")
                     return False
             else:
-                Logger.info("⏭️  Skipping system update as requested")
+                Logger.info("Skipping system update as requested")
 
             # Step 2: Install dependencies
             step_num += 1
@@ -955,8 +966,8 @@ class NymNodeInstaller:
 
             # Check for reinstallation
             if self.node_manager.check_if_node_installed():
-                Logger.warning("⚠️  Existing Nym node installation detected")
-                reinstall = Logger.prompt("Reinstall? This will overwrite existing configuration (y/N)")
+                Logger.warning("Existing Nym node installation detected")
+                reinstall = Logger.prompt("Reinstall? This will overwrite existing configuration (y/N): ")
                 if not reinstall.lower().startswith('y'):
                     Logger.info("Installation cancelled")
                     return False
@@ -993,7 +1004,7 @@ class NymNodeInstaller:
                 Logger.error("Service setup failed")
                 return False
 
-            Logger.success("🎉 Node installation completed successfully!")
+            Logger.success("Node installation completed successfully!")
             return True
 
         except Exception as e:
@@ -1002,16 +1013,16 @@ class NymNodeInstaller:
 
     def _show_mnemonic(self):
         """Display the mnemonic phrase with enhanced security warnings"""
-        Logger.section("🔐 Wallet Credentials")
+        Logger.section("Wallet Credentials")
         
         mnemonic = self.node_manager.get_cosmos_mnemonic()
         if not mnemonic:
-            Logger.error("❌ Could not retrieve mnemonic phrase")
+            Logger.error("Could not retrieve mnemonic phrase")
             Logger.info("You may need to check the node configuration manually")
             return
 
         # Security warnings
-        Logger.highlight("⚠️  CRITICAL SECURITY INFORMATION ⚠️")
+        Logger.highlight("CRITICAL SECURITY INFORMATION")
         print(f"{Colors.RED}{Colors.BOLD}This mnemonic phrase is the ONLY way to recover your wallet!{Colors.END}")
         print(f"{Colors.RED}• Store it in a secure location{Colors.END}")
         print(f"{Colors.RED}• Never share it with anyone{Colors.END}")
@@ -1020,14 +1031,13 @@ class NymNodeInstaller:
 
         # Display mnemonic
         Logger.highlight("YOUR WALLET MNEMONIC PHRASE")
-        print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.RED}{Colors.BOLD} {mnemonic} {Colors.END}\n")
-        # print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.BOLD} {mnemonic} {Colors.END}\n")
+        print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.BOLD} {mnemonic} {Colors.END}\n")
 
         # Confirmation
         while True:
-            confirmed = Logger.prompt("Have you safely stored this mnemonic phrase? (yes/no)")
+            confirmed = Logger.prompt("Have you safely stored this mnemonic phrase? (yes/no): ")
             if confirmed.lower() in ['yes', 'y']:
-                Logger.success("✅ Mnemonic phrase confirmed as stored")
+                Logger.success("Mnemonic phrase confirmed as stored")
                 break
             elif confirmed.lower() in ['no', 'n']:
                 Logger.warning("Please store the mnemonic phrase before continuing")
@@ -1037,18 +1047,18 @@ class NymNodeInstaller:
 
     def _guide_wallet_setup(self):
         """Guide user through wallet setup"""
-        Logger.section("💰 Wallet Setup Instructions")
+        Logger.section("Wallet Setup Instructions")
         
         Logger.info("Next steps for wallet setup:")
-        print(f"  {Colors.CYAN}1.{Colors.END} Download Nym Wallet: {Colors.BLUE}https://nym.com/wallet{Colors.END}")
+        print(f"  {Colors.CYAN}1.{Colors.END} Download Nym Wallet: {Colors.GREEN_LIGHT}https://nym.com/wallet{Colors.END}")
         print(f"  {Colors.CYAN}2.{Colors.END} Install and open the wallet application")
         print(f"  {Colors.CYAN}3.{Colors.END} Choose 'Restore from mnemonic'")
         print(f"  {Colors.CYAN}4.{Colors.END} Enter the 24-word phrase you saved")
-        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}101 NYM{Colors.END}")
+        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}101 NYM{Colors.END} (1 NYM for transactions)")
         
-        Logger.warning("💡 Minimum 101 NYM required for node bonding!")
+        Logger.warning("Minimum 100 NYM required for node bonding!")
         Logger.info("You can purchase NYM on exchanges like:")
-        print(f"  • Binance, Kraken, Gate.io, etc.")
+        print(f"  • Osmosis.zone, Kraken, Gate.io, etc.")
         print(f"  • Always verify the official contract address")
         
         print(f"\n{Colors.YELLOW}When you're ready to continue with bonding...{Colors.END}")
@@ -1056,29 +1066,29 @@ class NymNodeInstaller:
 
     def _show_completion(self):
         """Show completion message and next steps"""
-        Logger.section("🎉 Installation Complete!")
+        Logger.section("Installation Complete!")
         
-        Logger.success("✨ Your Nym node has been successfully installed and configured!")
+        Logger.success("Your Nym node has been successfully installed and configured!")
         
-        print(f"\n{Colors.BOLD}📋 What's been set up:{Colors.END}")
-        print(f"  {Colors.GREEN}✓{Colors.END} Nym node binary installed")
-        print(f"  {Colors.GREEN}✓{Colors.END} Node initialized with ID: {Colors.YELLOW}{self.node_manager.config.node_id}{Colors.END}")
-        print(f"  {Colors.GREEN}✓{Colors.END} Firewall configured (ports 8080, 1789, 1790, 9000)")
-        print(f"  {Colors.GREEN}✓{Colors.END} System service created and started")
-        print(f"  {Colors.GREEN}✓{Colors.END} Wallet mnemonic generated")
-        print(f"  {Colors.GREEN}✓{Colors.END} Contract message signed")
+        print(f"\n{Colors.BOLD}What's been set up:{Colors.END}")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} Nym node binary installed")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} Node initialized with ID: {Colors.YELLOW}{self.node_manager.config.node_id}{Colors.END}")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} Firewall configured (ports 8080, 1789, 1790, 9000)")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} System service created and started")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} Wallet mnemonic generated")
+        print(f"  {Colors.GREEN_BRIGHT}✓{Colors.END} Contract message signed")
 
-        print(f"\n{Colors.BOLD}🔧 Useful commands:{Colors.END}")
+        print(f"\n{Colors.BOLD}Useful commands:{Colors.END}")
         print(f"  Check service status: {Colors.CYAN}sudo systemctl status nym-node{Colors.END}")
         print(f"  View logs: {Colors.CYAN}sudo journalctl -u nym-node -f{Colors.END}")
         print(f"  Restart service: {Colors.CYAN}sudo systemctl restart nym-node{Colors.END}")
         
-        print(f"\n{Colors.BOLD}📚 Resources:{Colors.END}")
-        print(f"  Documentation: {Colors.BLUE}https://nymtech.net/docs{Colors.END}")
-        print(f"  Community: {Colors.BLUE}https://discord.gg/nym{Colors.END}")
-        print(f"  Status page: {Colors.BLUE}https://status.nymtech.net{Colors.END}")
+        print(f"\n{Colors.BOLD}Resources:{Colors.END}")
+        print(f"  Documentation: {Colors.GREEN_LIGHT}https://nymtech.net/docs{Colors.END}")
+        print(f"  Community: {Colors.GREEN_LIGHT}https://discord.gg/nym{Colors.END}")
+        print(f"  Status page: {Colors.GREEN_LIGHT}https://status.nymtech.net{Colors.END}")
 
-        Logger.highlight("🚀 Your Nym node is now running and ready!")
+        Logger.highlight("Your Nym node is now running and ready!")
         Logger.info("Remember to complete the bonding process in the Nym Wallet")
 
 def main():
