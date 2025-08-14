@@ -136,7 +136,7 @@ class Logger:
     @staticmethod
     def highlight(message: str) -> None:
         """Print highlighted message"""
-        print(f"{Colors.BG_YELLOW}{Colors.BOLD} {message} {Colors.END}")
+        print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.BOLD} {message} {Colors.END}")
 
     @staticmethod
     def prompt(message: str) -> str:
@@ -746,12 +746,12 @@ WantedBy=multi-user.target
             
             balance_nym = balance_unym / 1_000_000
             
-            if balance_nym >= 100:
+            if balance_nym >= 101:
                 Logger.success(f"Current balance: {Colors.GREEN}{balance_nym:.6f} NYM{Colors.END} ✅")
             elif balance_nym > 0:
-                Logger.warning(f"Current balance: {Colors.YELLOW}{balance_nym:.6f} NYM{Colors.END} (need ≥100 NYM)")
+                Logger.warning(f"Current balance: {Colors.YELLOW}{balance_nym:.6f} NYM{Colors.END} (need 101 NYM)")
             else:
-                Logger.error(f"Current balance: {Colors.RED}{balance_nym:.6f} NYM{Colors.END} (need ≥100 NYM)")
+                Logger.error(f"Current balance: {Colors.RED}{balance_nym:.6f} NYM{Colors.END} (need ≥101 NYM)")
 
         except Exception as e:
             Logger.error(f"Failed to check balance: {e}")
@@ -1020,7 +1020,8 @@ class NymNodeInstaller:
 
         # Display mnemonic
         Logger.highlight("YOUR WALLET MNEMONIC PHRASE")
-        print(f"{Colors.BG_YELLOW}{Colors.BOLD} {mnemonic} {Colors.END}\n")
+        print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.RED}{Colors.BOLD} {mnemonic} {Colors.END}\n")
+        # print(f"{Colors.BG_YELLOW}{Colors.RED}{Colors.BOLD} {mnemonic} {Colors.END}\n")
 
         # Confirmation
         while True:
@@ -1043,9 +1044,9 @@ class NymNodeInstaller:
         print(f"  {Colors.CYAN}2.{Colors.END} Install and open the wallet application")
         print(f"  {Colors.CYAN}3.{Colors.END} Choose 'Restore from mnemonic'")
         print(f"  {Colors.CYAN}4.{Colors.END} Enter the 24-word phrase you saved")
-        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}100 NYM{Colors.END}")
+        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}101 NYM{Colors.END}")
         
-        Logger.warning("💡 Minimum 100 NYM required for node bonding!")
+        Logger.warning("💡 Minimum 101 NYM required for node bonding!")
         Logger.info("You can purchase NYM on exchanges like:")
         print(f"  • Binance, Kraken, Gate.io, etc.")
         print(f"  • Always verify the official contract address")
