@@ -34,7 +34,6 @@ class Colors:
     # Main Theme Colors (Green Tones)
     GREEN_BRIGHT = '\033[92m'
     GREEN_LIGHT = '\033[38;5;42m'
-    GREEN_DARK = '\033[38;5;22m'
     
     # Accent & Status Colors
     YELLOW = '\033[93m'
@@ -60,7 +59,7 @@ class Colors:
 class ProgressIndicator:
     """Progress indicator for long-running operations"""
     
-    def __init__(self, message: str, spinner_chars: str = "|/-\" ):
+    def __init__(self, message: str, spinner_chars: str = '|/-\"' ):
         self.message = message
         self.spinner_chars = spinner_chars
         self.running = False
@@ -120,7 +119,7 @@ class Logger:
     @staticmethod
     def info(message: str) -> None:
         """Print info message"""
-        print(f"{Colors.GREEN_LIGHT}{Colors.BOLD}INFO:{Colors.END} {Colors.GREEN_DARK}{message}{Colors.END}")
+        print(f"{Colors.GREEN_LIGHT}{Colors.BOLD}INFO:{Colors.END} {Colors.GREEN_LIGHT}{message}{Colors.END}")
 
     @staticmethod
     def debug(message: str) -> None:
@@ -132,7 +131,7 @@ class Logger:
         """Print step message"""
         progress = "█" * (step_num * 20 // total_steps) + "░" * (20 - (step_num * 20 // total_steps))
         print(f"{Colors.GREEN_BRIGHT}{Colors.BOLD}[{step_num}/{total_steps}]{Colors.END} "
-              f"{Colors.GREEN_DARK}[{progress}]{Colors.END} {message}")
+              f"{Colors.GREEN_LIGHT}[{progress}]{Colors.END} {message}")
 
     @staticmethod
     def section(title: str) -> None:
@@ -730,8 +729,8 @@ WantedBy=multi-user.target
             Logger.error(f"Error reading cosmos mnemonic: {e}")
             return ""
 
-    def check_balance(self, address: str) -> None:
-        """Check NYX account balance using urllib"""
+    def check_balance(self, address: str) -> Optional[Dict[str, Any]]:
+        """Check NYX account balance using urllib and return detailed info"""
         Logger.info(f"Checking account balance for: {Colors.YELLOW}{address}{Colors.END}")
         
         try:
@@ -741,10 +740,17 @@ WantedBy=multi-user.target
                 data = json.loads(response.read().decode())
 
             balance_unym = 0
-            for coin in data.get('balances', []):
-                if coin.get('denom') == 'unym':
-                    balance_unym = int(coin.get('amount', 0))
-                    break
+            # for coin in data.get('balances', []):
+            #     if coin.get('denom') == 'unym':
+            #         balance_unym = int(coin.get('amount', 0))
+            #         break
+            # balance_unym = int(data.get('balance', 0))
+
+            # Проверка наличия ключей
+            if "balance" in data and "amount" in data["balance"]:
+                balance_unym = int(data["balance"]["amount"])
+            else:
+                balance_unym = 0  # Значение по умолчанию
             
             balance_nym = balance_unym / 1_000_000
             
@@ -754,9 +760,12 @@ WantedBy=multi-user.target
                 Logger.warning(f"Current balance: {Colors.YELLOW}{balance_nym:.6f} NYM{Colors.END} (need 101 NYM)")
             else:
                 Logger.error(f"Current balance: {Colors.RED}{balance_nym:.6f} NYM{Colors.END} (need ≥101 NYM)")
+            
+            return balance_nym
 
         except Exception as e:
             Logger.error(f"Failed to check balance: {e}")
+            return None
 
     def sign_contract_message(self) -> None:
         """Sign the contract message with enhanced UX"""
@@ -1039,22 +1048,56 @@ class NymNodeInstaller:
                 Logger.error("Please answer 'yes' or 'no'")
 
     def _guide_wallet_setup(self):
-        """Guide user through wallet setup"""
-        Logger.section("Wallet Setup Instructions")
+        """Guide user through wallet setup and check balance"""
+        Logger.section("Wallet Setup and Funding")
         
         Logger.info("Next steps for wallet setup:")
         print(f"  {Colors.CYAN}1.{Colors.END} Download Nym Wallet: {Colors.GREEN_LIGHT}https://nym.com/wallet{Colors.END}")
         print(f"  {Colors.CYAN}2.{Colors.END} Install and open the wallet application")
         print(f"  {Colors.CYAN}3.{Colors.END} Choose 'Restore from mnemonic'")
         print(f"  {Colors.CYAN}4.{Colors.END} Enter the 24-word phrase you saved")
-        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}101 NYM{Colors.END} (1 NYM for transactions)")
+        print(f"  {Colors.CYAN}5.{Colors.END} Fund your wallet with at least {Colors.YELLOW}101 NYM{Colors.END} (100 for bonding, 1 for fees)")
         
         Logger.warning("Minimum 100 NYM required for node bonding!")
         Logger.info("You can purchase NYM on exchanges like:")
         print(f"  • Osmosis.zone, Kraken, Gate.io, etc.")
         print(f"  • Always verify the official contract address")
         
-        print(f"\n{Colors.YELLOW}When you're ready to continue with bonding...{Colors.END}")
+        print(f"\n{Colors.YELLOW}Once your wallet is funded, we need to check the balance.{Colors.END}")
+
+        wallet_address = ""
+        while not wallet_address:
+            wallet_address = Logger.prompt("Please enter your Nym wallet address (it starts with 'n'): ").strip()
+            if not wallet_address.startswith('n'):
+                Logger.error("Invalid address format. It should start with 'n'.")
+                wallet_address = ""
+
+        while True:
+            balance_data = self.node_manager.check_balance(wallet_address)
+            
+            if balance_data:
+                balance_unym = 0
+                for coin in balance_data.get('balances', []):
+                    if coin.get('denom') == 'unym':
+                        balance_unym = int(coin.get('amount', 0))
+                        break
+                
+                balance_nym = balance_unym / 1_000_000
+
+                if balance_nym >= 101:
+                    Logger.success(f"Sufficient balance detected: {balance_nym:.6f} NYM")
+                    break
+                else:
+                    Logger.warning(f"Balance is {balance_nym:.6f} NYM. Need at least 101 NYM.")
+            else:
+                Logger.error("Could not retrieve balance.")
+
+            retry = Logger.prompt("Check balance again? (y/N): ").strip().lower()
+            if retry not in ['y', 'yes']:
+                Logger.error("Cannot proceed without sufficient funds for bonding.")
+                Logger.info("Please fund your wallet and run the script again.")
+                sys.exit(1)
+
         input(f"{Colors.CYAN}Press Enter to proceed to the bonding step...{Colors.END}")
 
     def _show_completion(self):
