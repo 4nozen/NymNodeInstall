@@ -22,7 +22,7 @@ This script provides an automated way to install, configure, and manage a [Nym N
 1.  **Clone the repository or download the script:**
 
     ```bash
-    wget https://raw.githubusercontent.com/4nozen/NymNodeInstall/main/install.py
+    wget -O https://raw.githubusercontent.com/4nozen/NymNodeInstall/main/install.py
     ```
 
 2.  **Run the installer:**
