@@ -77,7 +77,7 @@ G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
 [bumpmeup nodes](https://nymesis.vercel.app/?q=bump)
 
 _Node monitoring tool:_
-[Nymesis](https://nymesis.vercel.app/) https://nymesis.vercel.app/
+[Nymesis] https://nymesis.vercel.app/
 
 ---
 
