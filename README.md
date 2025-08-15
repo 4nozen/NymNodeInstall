@@ -81,6 +81,10 @@ _Node monitoring tool:_
 
 ---
 
+if you want to thank me here's the NYM wallet: n18lc3qmx4jqzr55gvh5qmg6z3q4874x4xmmhhqd
+
+---
+
 > **⚠️ Security Warning**
 >
 > Always review scripts that require `sudo` privileges before running them on your system. This script performs system-wide actions, including installing packages, modifying the firewall, and creating system services.
