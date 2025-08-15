@@ -1,6 +1,6 @@
 # Nym Node Installer
 
-This script provides an automated way to install, configure, and manage a [Nym Mixnode](https://nymtech.net/docs/operators/nodes/nym-node/). It is designed for Debian-based Linux distributions (like Ubuntu) and automates most of the setup process.
+This script provides an automated way to install, configure, and manage a [Nym Node](https://nymtech.net/docs/operators/nodes/nym-node/). It is designed for Debian-based Linux distributions (like Ubuntu) and automates most of the setup process.
 
 ## Features
 
