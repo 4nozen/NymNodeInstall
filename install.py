@@ -582,7 +582,7 @@ WantedBy=multi-user.target
         print(f"{Colors.BOLD}Identity Key:{Colors.END} {Colors.YELLOW}{bonding_info['identity_key']}{Colors.END}")
         print(f"{Colors.BOLD}Host:{Colors.END} {Colors.YELLOW}{bonding_info['host']}{Colors.END}")
         
-        Logger.info("\nInstructions:")
+        Logger.info("\nInstructions (https://nym.com/docs/operators/nodes/nym-node/bonding#3-enter-your-values-and-sign-with-your-node):")
         Logger.info("1. Open the Nym Wallet application")
         Logger.info("2. Go to the bonding section")
         Logger.info("3. Use the information above to generate the payload")
