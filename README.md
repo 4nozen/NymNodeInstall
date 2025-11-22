@@ -12,7 +12,7 @@ Automated installation script for Nym Network nodes with interactive setup.
 - Automatic firewall configuration
 - Color-coded interactive interface
 - Systemd service with auto-restart
-- Wallet integration and balance verification
+- Balance verification
 - Interactive contract signing
 
 ## Requirements
