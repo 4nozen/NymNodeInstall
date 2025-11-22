@@ -1,94 +1,106 @@
 # Nym Node Installer
 
-This script provides an automated way to install, configure, and manage a [Nym Node](https://nymtech.net/docs/operators/nodes/nym-node/). It is designed for Debian-based Linux distributions (like Ubuntu) and automates most of the setup process.
+Automated installation script for Nym Network nodes with interactive setup.
+
+[![Python 3.6+](https://img.shields.io/badge/python-3.6%2B-blue.svg)](https://www.python.org/downloads/)
+[![Linux](https://img.shields.io/badge/platform-Linux-lightgrey.svg)](https://www.linux.org/)
 
 ## Features
 
-- **Automated System Setup**: Updates the system and installs necessary dependencies (`curl`, `wget`, `ufw`).
-- **Latest Binary Download**: Fetches the latest stable release of the `nym-node` binary directly from the official Nym GitHub repository.
-- **Node Initialization**: Guides the user through the initial node configuration.
-- **Firewall Configuration**: Automatically configures `ufw` to open the required ports (8080, 1789, 1790, 9000).
-- **Systemd Service**: Creates and enables a `systemd` service to ensure the node runs automatically on system boot.
-- **Bonding Helper**: Simplifies the process of signing the contract message required for bonding the node with the Nym Wallet.
+- 🚀 Automated system setup and configuration
+- 🔧 Support for Mixnodes and Exit Gateways
+- 🛡️ Automatic firewall configuration
+- 🎨 Color-coded interactive interface
+- 🔄 Systemd service with auto-restart
+- 💰 Wallet integration and balance verification
+- ✍️ Interactive contract signing
 
-## Prerequisites
+## Requirements
 
-- A server running a Debian-based Linux distribution (e.g., Ubuntu 20.04 or later).
-- `sudo` or `root` privileges.
-- At least 100 NYM tokens in your Nym Wallet for bonding the node.
+- Linux (Debian/Ubuntu)
+- Python 3.6+
+- sudo privileges
+- Public IP address
+- 101+ NYM tokens
+
+## Quick Start
+
+```bash
+# Download
+wget https://raw.githubusercontent.com/yourusername/nym-installer/main/nym_installer.py
+
+# Run
+python3 nym_installer.py
+```
 
 ## Usage
 
-1.  **Clone the repository or download the script:**
-
-    ```bash
-    wget -O https://raw.githubusercontent.com/4nozen/NymNodeInstall/main/install.py
-    ```
-
-2.  **Run the installer:**
-
-    The script requires `sudo` privileges for system-wide changes.
-
-    **Standard Installation (with system update):**
-
-    ```bash
-    python3 install.py
-    ```
-
-    **Installation without system update:**
-    If you want to skip the initial system update and upgrade steps, use the `--no-update` flag:
-
-    ```bash
-    python3 install.py --no-update
-    ```
-
-## Installation Process
-
-The script will guide you through the following steps:
-
-1.  **System Update (Optional)**: Updates your system's package lists and upgrades installed packages.
-2.  **Dependency Installation**: Installs required tools.
-3.  **Nym Binary Download**: Downloads and installs the `nym-node` binary.
-4.  **Firewall Setup**: Configures `ufw`.
-5.  **Node Initialization**: You will be prompted to enter a unique **Node ID**.
-6.  **Mnemonic Phrase**: The script will display your node's mnemonic phrase. **Save this phrase in a secure location!** You will need it to restore your wallet.
-7.  **Bonding**: The script will provide you with an **Identity Key** and **Host IP**. You will need to use these in the Nym Wallet to generate a payload.
-8.  **Signing**: Paste the payload from the wallet back into the terminal to complete the signing process.
-9.  **Service Start**: The `nym-node` service will be started and enabled on boot.
-
----
-
-**You can delegate to my nodes:**
-
 ```bash
-F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
+# Full installation
+python3 nym_installer.py
 
+# Skip system update
+python3 nym_installer.py --no-update
 ```
 
-```bash
-E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
+The installer will guide you through:
+1. System setup and dependencies
+2. Node mode selection (Mixnode/Exit Gateway)
+3. Firewall configuration
+4. Node initialization
+5. Wallet setup and funding
+6. Contract signing
 
+## Service Management
+
+```bash
+# Check status
+sudo systemctl status nym-node
+
+# View logs
+sudo journalctl -u nym-node -f
+
+# Restart
+sudo systemctl restart nym-node
 ```
 
-```bash
+## Configuration
+
+- Binary: `/usr/local/bin/nym-node`
+- Config: `~/.nym/nym-nodes/YOUR_NODE_ID/`
+- Service: `/etc/systemd/system/nym-node.service`
+
+## Ports
+
+- `8080` - HTTP API
+- `1789` - Mixnet traffic
+- `1790` - Verloc protocol
+- `9000` - WireGuard (Exit Gateway)
+
+## Security
+
+⚠️ **Important**: Save your 24-word mnemonic phrase securely. It's the only way to recover your wallet.
+
+## Support
+
+- [Nym Discord](https://discord.gg/nym)
+- [Documentation](https://nymtech.net/docs)
+- [GitHub Issues](https://github.com/yourusername/nym-installer/issues)
+
+## Support the Developer
+
+Delegate to:
+```
+8jFCkcCJus7cHg8LVQiTwbEuKqzmMm6EwYezNx2cKArB
+EmUjBBYcvNzEovM7AhxrYXeTJJ4Kg2g2w7sP6V1GDa13
+CRzMQu3Fbf3eGCscPog323gofAGWzT37gXuvWEFHm9NG
 G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm
+E3BayLcp2RiQ66ZxzkPkZuREYCYrsHB1o7vFULQ6u6Np
+F618gw6jZaLR1VdMTeaH11MhHQJY5rdpYEDLrMKEHcjk
 ```
 
-[bumpmeup nodes](https://nymesis.vercel.app/?q=bump)
+Donate: `n18lc3qmx4jqzr55gvh5qmg6z3q4874x4xmmhhqd`
 
-_Node monitoring tool:_
-[Nymesis] https://nymesis.vercel.app/
+## License
 
----
-
-if you want to thank me here's the NYM wallet: n18lc3qmx4jqzr55gvh5qmg6z3q4874x4xmmhhqd
-
----
-
-> **⚠️ Security Warning**
->
-> Always review scripts that require `sudo` privileges before running them on your system. This script performs system-wide actions, including installing packages, modifying the firewall, and creating system services.
-
-```
-
-```
+MIT License - see [LICENSE](LICENSE) file
