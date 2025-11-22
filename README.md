@@ -85,7 +85,6 @@ sudo systemctl restart nym-node
 
 - [Nym Discord](https://discord.gg/nym)
 - [Documentation](https://nymtech.net/docs)
-- [GitHub Issues](https://github.com/yourusername/nym-installer/issues)
 
 ## Support the Developer
 
