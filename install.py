@@ -1004,6 +1004,7 @@ class NymNodeInstaller:
         print(f"\n{Color.BOLD.value}Support the Developer:{Color.END.value}")
         Logger.info("Delegate to nodes:")
         nodes = [
+            "8jFCkcCJus7cHg8LVQiTwbEuKqzmMm6EwYezNx2cKArB",
             "EmUjBBYcvNzEovM7AhxrYXeTJJ4Kg2g2w7sP6V1GDa13",
             "CRzMQu3Fbf3eGCscPog323gofAGWzT37gXuvWEFHm9NG",
             "G2adZrt5ByjSZKrR6G139FYfd4ScxHbinQjpP28h4APm",
