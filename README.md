@@ -27,7 +27,7 @@ Automated installation script for Nym Network nodes with interactive setup.
 
 ```bash
 # Download
-wget https://raw.githubusercontent.com/yourusername/nym-installer/main/nym_installer.py
+wget wget https://raw.githubusercontent.com/4nozen/NymNodeInstall/main/nym_installer.py
 
 # Run
 python3 nym_installer.py
