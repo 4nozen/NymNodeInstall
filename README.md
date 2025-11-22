@@ -7,13 +7,13 @@ Automated installation script for Nym Network nodes with interactive setup.
 
 ## Features
 
-- 🚀 Automated system setup and configuration
-- 🔧 Support for Mixnodes and Exit Gateways
-- 🛡️ Automatic firewall configuration
-- 🎨 Color-coded interactive interface
-- 🔄 Systemd service with auto-restart
-- 💰 Wallet integration and balance verification
-- ✍️ Interactive contract signing
+- Automated system setup and configuration
+- Support for Mixnodes and Exit Gateways
+- Automatic firewall configuration
+- Color-coded interactive interface
+- Systemd service with auto-restart
+- Wallet integration and balance verification
+- Interactive contract signing
 
 ## Requirements
 
