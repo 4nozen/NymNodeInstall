@@ -81,6 +81,77 @@ sudo systemctl restart nym-node
 
 ⚠️ **Important**: Save your 24-word mnemonic phrase securely. It's the only way to recover your wallet.
 
+# nym-node Updater
+
+Simple Python script to check and update nym-node binary from GitHub releases.
+
+## Features
+
+- Checks current nym-node version
+- Fetches latest release from GitHub
+- Downloads and compares versions
+- Interactive or automatic update
+- Optional service restart
+- Comprehensive logging
+
+## Requirements
+
+```bash
+pip install requests
+```
+
+## Usage
+
+### Interactive mode
+```bash
+./nym_updater.py
+```
+
+Script will ask for confirmation before updating and restarting service.
+
+### Automatic mode
+```bash
+./nym_updater.py -y
+```
+
+Automatically answers "yes" to all prompts (update + service restart).
+
+## What it does
+
+1. Finds your current nym-node installation
+2. Gets current Build Version
+3. Checks GitHub for latest release
+4. Downloads new binary to `/tmp/nym-update/`
+5. Compares versions
+6. If update available:
+   - Creates backup of current binary
+   - Replaces binary using `sudo`
+   - Optionally restarts `nym-node.service`
+
+## Example output
+
+```
+📦 Current Build Version: 2025-01-15T10:30:00Z
+🌐 Latest Release: nym-binaries-v2025.20-leerdammer
+📥 Downloaded Build Version: 2025-01-20T14:45:00Z
+
+✅ Update available! (2025-01-20T14:45:00Z > 2025-01-15T10:30:00Z)
+
+Do you want to update? [y/N]: y
+✅ Update successful!
+
+Restart nym-node.service? [y/N]: y
+✅ Service restarted successfully
+```
+
+## Notes
+
+- Requires `sudo` access for updating binary and restarting service
+- Creates backup with `.backup` suffix before updating
+- Binary locations checked:
+  - System PATH
+  - `~/.nym/bin/nym-node`
+
 ## Support
 
 - [Nym Discord](https://discord.gg/nym)
