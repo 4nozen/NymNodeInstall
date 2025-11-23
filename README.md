@@ -144,14 +144,6 @@ Restart nym-node.service? [y/N]: y
 ✅ Service restarted successfully
 ```
 
-## Notes
-
-- Requires `sudo` access for updating binary and restarting service
-- Creates backup with `.backup` suffix before updating
-- Binary locations checked:
-  - System PATH
-  - `~/.nym/bin/nym-node`
-
 ## Support
 
 - [Nym Discord](https://discord.gg/nym)
